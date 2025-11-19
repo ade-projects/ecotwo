@@ -52,19 +52,108 @@ top10_tinggi = df_clean.nlargest(10, "rata_rata_3tahun")
 top10_rendah = df_clean.nsmallest(10, "rata_rata_3tahun")
 
 # ---------------------------------------------------------
-# 6. Tambah kategori (contoh: jasa, industri)
-#    Bisa kamu sesuaikan dengan kebutuhan
+# Fungsi untuk menentukan kategori besar (Agregat, Pertanian,
+# Industri, Perdagangan, Transportasi, dst.)
 # ---------------------------------------------------------
+
 def tentukan_kategori(nama):
     nama_lower = nama.lower()
-    if any(k in nama_lower for k in ["jasa", "perdagangan", "hotel", "restoran"]):
-        return "jasa"
-    elif any(k in nama_lower for k in ["industri", "manufaktur", "pabrik"]):
-        return "industri"
-    elif any(k in nama_lower for k in ["pertanian", "perkebunan", "tanaman"]):
-        return "pertanian"
-    else:
-        return "lainnya"
+
+    # 1. Agregat GDP
+    if any(k in nama_lower for k in [
+        "agregat", "laju pertumbuhan ekonomi", 
+        "dengan migas", "tanpa migas"
+    ]):
+        return "Agregat (GDP)"
+
+    # 2. Pertanian, Kehutanan, Perikanan
+    elif any(k in nama_lower for k in [
+        "pertanian", "perkebunan", "peternakan", "perikanan",
+        "kehutanan", "perburuan", "tanaman", "hortikultura"
+    ]):
+        return "Pertanian, Kehutanan & Perikanan"
+
+    # 3. Pertambangan
+    elif any(k in nama_lower for k in [
+        "pertambangan", "penggalian", "batubara", 
+        "minyak", "gas bumi"
+    ]):
+        return "Pertambangan & Penggalian"
+
+    # 4. Industri / Manufaktur
+    elif any(k in nama_lower for k in [
+        "industri", "manufaktur", "pengolahan"
+    ]):
+        return "Industri Pengolahan"
+
+    # 5. Utilitas (Listrik / Gas / Air)
+    elif any(k in nama_lower for k in [
+        "listrik", "gas", "ketenagalistrikan", "pengadaan air"
+    ]):
+        return "Utilitas (Listrik/Gas/Air)"
+
+    # 6. Konstruksi
+    elif "konstruksi" in nama_lower:
+        return "Konstruksi"
+
+    # 7. Perdagangan & Reparasi
+    elif any(k in nama_lower for k in [
+        "perdagangan"
+    ]):
+        return "Perdagangan & Reparasi"
+
+    # 8. Transportasi & Pergudangan
+    elif any(k in nama_lower for k in [
+        "transportasi", "angkutan", "pergudangan",
+    ]):
+        return "Transportasi & Pergudangan"
+
+    # 9. Akomodasi & Makan Minum
+    elif any(k in nama_lower for k in [
+        "akomodasi", "penyediaan"
+    ]):
+        return "Akomodasi & Jasa Makanan"
+
+    # 10. Informasi & Komunikasi
+    elif "informasi" in nama_lower or "komunikasi" in nama_lower:
+        return "Informasi & Komunikasi"
+
+    # 11. Jasa Keuangan & Asuransi
+    elif any(k in nama_lower for k in [
+        "keuangan", "asuransi", "bank"
+    ]):
+        return "Jasa Keuangan & Asuransi"
+
+    # 12. Real Estate
+    elif "real estate" in nama_lower:
+        return "Real Estate / Properti"
+
+    # 13. Jasa Perusahaan
+    elif "jasa perusahaan" in nama_lower:
+        return "Jasa Perusahaan"
+
+    # 14. Administrasi Pemerintahan
+    elif any(k in nama_lower for k in [
+        "administrasi", "pertahanan", "jaminan sosial"
+    ]):
+        return "Administrasi Publik & Pemerintahan"
+
+    # 15. Pendidikan
+    elif "pendidikan" in nama_lower:
+        return "Pendidikan"
+
+    # 16. Kesehatan & Sosial
+    elif any(k in nama_lower for k in [
+        "kesehatan", "kegiatan sosial"
+    ]):
+        return "Kesehatan & Kegiatan Sosial"
+
+    # 17. Jasa Lainnya
+    elif "jasa lainnya" in nama_lower or "lainnya" in nama_lower:
+        return "Jasa Lainnya"
+
+    # Default
+    return "Lainnya"
 
 df_clean["kategori"] = df_clean["Laju Pertumbuhan Ekonomi"].apply(tentukan_kategori)
 
