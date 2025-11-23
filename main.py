@@ -1,16 +1,22 @@
-# ======================================
-# Silahkan pakai file ini untuk program
-# ======================================
+"""
+Program Analisis Laju Pertumbuhan Ekonomi
+"""
+
+# ---------------------------------------------------------
+# Load library
+# ---------------------------------------------------------
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
 
 # ---------------------------------------------------------
 # 1. LOAD DATA
 # ---------------------------------------------------------
-df = pd.read_csv("Data Pertumbuhan Ekonomi Kaltim.csv", sep=";")
+file_path = "Data Pertumbuhan Ekonomi Kaltim.csv"
+df = pd.read_csv(file_path, sep=";")
 
 # ---------------------------------------------------------
-# 2. CLEANING: ubah kolom tahun menjadi numerik
+# 2. Parsing: ubah data kolom menjadi float
 # ---------------------------------------------------------
 tahun_cols = ["2016", "2017", "2018", "2019"]
 
@@ -18,15 +24,12 @@ for col in tahun_cols:
     df[col] = (
         df[col]
         .astype(str)
-        .str.replace("%", "", regex=False)
         .str.replace(",", ".", regex=False)
         .astype(float)
     )
 
 # ---------------------------------------------------------
-# 3. DATA CLEANSING:
-#    a) Hapus baris yang 0% di 3 tahun berturut-turut
-#    b) Hapus baris yang 0% untuk seluruh periode 2016–2019
+# 3. DATA CLEANSING: Hapus baris yang 0% di 4 tahun berturut-turut (2016-2019)
 # ---------------------------------------------------------
 df["zero_3_tahun"] = (
     ((df["2016"] == 0) & (df["2017"] == 0) & (df["2018"] == 0)) |
