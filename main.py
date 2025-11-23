@@ -92,65 +92,29 @@ def tentukan_kategori(nama):
     ]):
         return "Utilitas (Listrik/Gas/Air)"
 
-    # 6. Konstruksi
-    elif "konstruksi" in nama_lower:
-        return "Konstruksi"
-
-    # 7. Perdagangan & Reparasi
+    # 6. Perdagangan & Reparasi
     elif any(k in nama_lower for k in [
         "perdagangan"
     ]):
         return "Perdagangan & Reparasi"
 
-    # 8. Transportasi & Pergudangan
+    # 7. Transportasi & Pergudangan
     elif any(k in nama_lower for k in [
         "transportasi", "angkutan", "pergudangan",
     ]):
         return "Transportasi & Pergudangan"
 
-    # 9. Akomodasi & Makan Minum
+    # 8. Akomodasi & Makan Minum
     elif any(k in nama_lower for k in [
         "akomodasi", "penyediaan"
     ]):
         return "Akomodasi & Jasa Makanan"
 
-    # 10. Informasi & Komunikasi
-    elif "informasi" in nama_lower or "komunikasi" in nama_lower:
-        return "Informasi & Komunikasi"
-
-    # 11. Jasa Keuangan & Asuransi
+    # 9. Jasa Keuangan & Asuransi
     elif any(k in nama_lower for k in [
         "keuangan", "asuransi", "bank"
     ]):
         return "Jasa Keuangan & Asuransi"
-
-    # 12. Real Estate
-    elif "real estate" in nama_lower:
-        return "Real Estate / Properti"
-
-    # 13. Jasa Perusahaan
-    elif "jasa perusahaan" in nama_lower:
-        return "Jasa Perusahaan"
-
-    # 14. Administrasi Pemerintahan
-    elif any(k in nama_lower for k in [
-        "administrasi", "pertahanan", "jaminan sosial"
-    ]):
-        return "Administrasi Publik & Pemerintahan"
-
-    # 15. Pendidikan
-    elif "pendidikan" in nama_lower:
-        return "Pendidikan"
-
-    # 16. Kesehatan & Sosial
-    elif any(k in nama_lower for k in [
-        "kesehatan", "kegiatan sosial"
-    ]):
-        return "Kesehatan & Kegiatan Sosial"
-
-    # 17. Jasa Lainnya
-    elif "jasa lainnya" in nama_lower or "lainnya" in nama_lower:
-        return "Jasa Lainnya"
 
     # Default
     return "Lainnya"
