@@ -25,6 +25,22 @@ for col in tahun_cols:
         .str.replace(",", ".", regex=False)
         .astype(float)
     )
+#------------------------------------------------------------------
+# Hapus frasa "Pertumbuhan Ekonomi" (case-insensitive) di kolom
+#------------------------------------------------------------------
+# Teks yang TIDAK boleh dihapus (harus sama persis)
+teks_tidak_diubah = "Laju Pertumbuhan Ekonomi"
+
+# Hanya baris yang tidak sama persis yang diproses
+mask = df["Laju Pertumbuhan Ekonomi"].str.strip() != teks_tidak_diubah
+
+# Hapus frasa hanya pada baris yang boleh diubah
+df.loc[mask, "Laju Pertumbuhan Ekonomi"] = (
+    df.loc[mask, "Laju Pertumbuhan Ekonomi"]
+    .str.replace(r"(?i)pertumbuhan ekonomi", "", regex=True)
+    .str.replace("  ", " ")
+    .str.strip()
+)
 
 # ---------------------------------------------------------
 # 3. DATA CLEANSING: Hapus baris yang 0% di 4 tahun berturut-turut (2016-2019)
