@@ -6,8 +6,6 @@ Program Analisis Laju Pertumbuhan Ekonomi
 # Load library
 # ---------------------------------------------------------
 import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
 
 # ---------------------------------------------------------
 # 1. LOAD DATA
@@ -30,29 +28,16 @@ for col in tahun_cols:
 
 # ---------------------------------------------------------
 # 3. DATA CLEANSING: Hapus baris yang 0% di 4 tahun berturut-turut (2016-2019)
+#    NOTE: karena me-rename data frame maka harus ditandai sebagai salinan ".copy()"
 # ---------------------------------------------------------
-df["zero_3_tahun"] = (
-    ((df["2016"] == 0) & (df["2017"] == 0) & (df["2018"] == 0)) |
-    ((df["2017"] == 0) & (df["2018"] == 0) & (df["2019"] == 0))
-)
-
-df["zero_semua"] = (df[tahun_cols] == 0).all(axis=1)
-
-df_clean = df[~(df["zero_3_tahun"] | df["zero_semua"])].copy()
-
-df_clean.drop(columns=["zero_3_tahun", "zero_semua"], inplace=True)
-
-# ---------------------------------------------------------
-# 4. Hitung rata-rata pertumbuhan (2017–2019 sebagai periode 3 tahun)
-# ---------------------------------------------------------
-periode_3_tahun = ["2017", "2018", "2019"]
-df_clean["rata_rata_3tahun"] = df_clean[periode_3_tahun].mean(axis=1)
+df_clean = df[~(df[tahun_cols] == 0).all(axis=1)].copy()
+df_clean["rata_rata_4tahun"] = df_clean[tahun_cols].mean(axis=1).round(2)
 
 # ---------------------------------------------------------
 # 5. TOP 10 TERTINGGI & TERENDAH
 # ---------------------------------------------------------
-top10_tinggi = df_clean.nlargest(10, "rata_rata_3tahun")
-top10_rendah = df_clean.nsmallest(10, "rata_rata_3tahun")
+top10_tinggi = df_clean.nlargest(10, "rata_rata_4tahun")
+top10_rendah = df_clean.nsmallest(10, "rata_rata_4tahun")
 
 # ---------------------------------------------------------
 # Fungsi untuk menentukan kategori besar (Agregat, Pertanian,
@@ -135,17 +120,20 @@ def migas_label(nama):
 
 df_clean["migas_non"] = df_clean["Laju Pertumbuhan Ekonomi"].apply(migas_label)
 
-ringkasan_migas = df_clean.groupby("migas_non")[periode_3_tahun].mean()
+# Menghitung perbandingan migas/non-migas tiap tahun 
+# dan membulatkannya menjadi 2 digit di belakang koma
+ringkasan_migas = df_clean.groupby("migas_non")[tahun_cols].mean().round(2)
 
 # ---------------------------------------------------------
 # 8. Deteksi tahun minus (merugi)
+# kurang yakin buat apa
 # ---------------------------------------------------------
 df_minus = df_clean[
     (df_clean[tahun_cols] < 0).any(axis=1)
 ][["Laju Pertumbuhan Ekonomi"] + tahun_cols]
 
 # ---------------------------------------------------------
-# 9. SIMPAN HASIL
+# 8. SIMPAN HASIL
 # ---------------------------------------------------------
 top10_tinggi.to_excel("top10_tinggi.xlsx", index=False)
 top10_rendah.to_excel("top10_rendah.xlsx", index=False)
