@@ -66,13 +66,19 @@ for i, val in enumerate(ringkasan_migas.values):
 plt.tight_layout()
 plt.show()
 
-# 5. Heatmap – Sektor dengan nilai minus
-df_minus = df[(df[tahun_cols] < 0).any(axis=1)]
-plt.figure(figsize=(12, 8))
-plt.imshow(df_minus[tahun_cols], cmap="coolwarm", aspect="auto")
-plt.title("Sektor dengan Pertumbuhan Negatif (2016–2019)", fontsize=14)
-plt.xticks(ticks=range(len(tahun_cols)), labels=tahun_cols)
-plt.yticks(ticks=range(len(df_minus)), labels=df_minus["Laju Pertumbuhan Ekonomi"], fontsize=8)
-plt.colorbar(label="Pertumbuhan (%)")
+#5. Line Chart – Tren Laju Pertumbuhan Ekonomi Kaltim (2016-2019) Top 10 Tertinggi
+# ---------------------------------------------------------
+plot_df = top10_tinggi.set_index('Laju Pertumbuhan Ekonomi')[tahun_cols]
+wrap_labels = [textwrap.fill(label, 40) for label in top10_tinggi["Laju Pertumbuhan Ekonomi"]] #wrap text agar tidak terlalu panjang
+plt.figure(figsize=(14,8))
+for idx, sector in enumerate(plot_df.index):
+    y = plot_df.loc[sector].astype(float).values
+    plt.plot([int(c) for c in tahun_cols], y, marker='o', label=wrap_labels[idx], linewidth=1.8)
+plt.xlabel("Tahun", fontsize=12)
+plt.ylabel("Laju Pertumbuhan (%)", fontsize=12)
+plt.title("Tren Laju Pertumbuhan Ekonomi Kaltim (2016-2019) - Top 10 Sektor Tertinggi", fontsize=14, fontweight='bold')
+plt.xticks([int(x) for x in tahun_cols])
+plt.legend(title="Daftar Sektor", bbox_to_anchor=(1.02, 1), loc='upper left', fontsize=9)
+plt.grid(axis='y', linestyle='--', linewidth=0.5, alpha=0.7)
 plt.tight_layout()
 plt.show()

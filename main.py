@@ -31,6 +31,10 @@ for col in tahun_cols:
 #    NOTE: karena me-rename data frame maka harus ditandai sebagai salinan ".copy()"
 # ---------------------------------------------------------
 df_clean = df[~(df[tahun_cols] == 0).all(axis=1)].copy()
+
+# ---------------------------------------------------------
+# 4. Mencari rata-rata 4 tahun (2016-2019)
+# ---------------------------------------------------------
 df_clean["rata_rata_4tahun"] = df_clean[tahun_cols].mean(axis=1).round(2)
 
 # ---------------------------------------------------------
@@ -40,8 +44,8 @@ top10_tinggi = df_clean.nlargest(10, "rata_rata_4tahun")
 top10_rendah = df_clean.nsmallest(10, "rata_rata_4tahun")
 
 # ---------------------------------------------------------
-# Fungsi untuk menentukan kategori besar (Agregat, Pertanian,
-# Industri, Perdagangan, Transportasi, dst.)
+# 6. Fungsi untuk menentukan kategori besar (Agregat, Pertanian,
+#    Industri, Perdagangan, Transportasi, dst.)
 # ---------------------------------------------------------
 
 def tentukan_kategori(nama):
@@ -125,25 +129,16 @@ df_clean["migas_non"] = df_clean["Laju Pertumbuhan Ekonomi"].apply(migas_label)
 ringkasan_migas = df_clean.groupby("migas_non")[tahun_cols].mean().round(2)
 
 # ---------------------------------------------------------
-# 8. Deteksi tahun minus (merugi)
-# kurang yakin buat apa
-# ---------------------------------------------------------
-df_minus = df_clean[
-    (df_clean[tahun_cols] < 0).any(axis=1)
-][["Laju Pertumbuhan Ekonomi"] + tahun_cols]
-
-# ---------------------------------------------------------
 # 8. SIMPAN HASIL
 # ---------------------------------------------------------
 top10_tinggi.to_excel("top10_tinggi.xlsx", index=False)
 top10_rendah.to_excel("top10_rendah.xlsx", index=False)
 df_clean.to_excel("data_sudah_clean.xlsx", index=False)
 ringkasan_migas.to_excel("ringkasan_migas_vs_non.xlsx")
-df_minus.to_excel("tahun_minus.xlsx", index=False)
 
 print("Analisis selesai! File hasil sudah disimpan:")
 print("- data_sudah_clean.xlsx")
 print("- top10_tinggi.xlsx")
 print("- top10_rendah.xlsx")
 print("- ringkasan_migas_vs_non.xlsx")
-print("- tahun_minus.xlsx")
+
