@@ -19,3 +19,10 @@ Proyek ini merupakan bagian dari tugas mini project Dasar Pemrograman. Tujuannya
 6. Nirvana Antika Maharani - Presenter
 
 ---
+## Cara Pakai
+1. Cloning repositori ini terlebih dahulu
+2. Buka folder ecotwo
+3. Jalankan program **main.py**
+4. Jalankan program **visual.py**
+5. Selesai
+---
